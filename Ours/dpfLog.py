@@ -2,7 +2,8 @@ import random
 import math
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
-
+import time
+import sys
 """
 Linear PIR read
 type(key) = str
@@ -10,12 +11,12 @@ type(value) = int
 """
 def add_to_16(value):
     while len(value) % 16 != 0:
-        value += '\0'
+        value += "\0"#str(random.randint(0, sys.maxsize))
     return str.encode(value)  # 返回bytes 
 
 def convert(convertKey, s):
     convertCipher = AES.new(convertKey, AES.MODE_ECB, use_aesni=True)
-    return int.from_bytes(convertCipher.encrypt(add_to_16(str(s)+str(-1))), 'big', signed=False)%2
+    return hash(str(convertKey)+str(s))%2 #int.from_bytes(convertCipher.encrypt(add_to_16(str(s)+str(-1))), 'big', signed=False)
 
 def prg(secretKey, s):
     """
@@ -25,8 +26,8 @@ def prg(secretKey, s):
     secretCipher = AES.new(secretKey, AES.MODE_ECB, use_aesni=True)
     sL = secretCipher.encrypt(add_to_16(str(s)+str(0)))[:16]
     sR = secretCipher.encrypt(add_to_16(str(s)+str(1)))[:16]
-    tL = int.from_bytes(secretCipher.encrypt(add_to_16(str(s)+str(2))), 'big', signed=False)%2
-    tR = int.from_bytes(secretCipher.encrypt(add_to_16(str(s)+str(3))), 'big', signed=False)%2
+    tL = hash(str(secretKey)+str(s)+str(2))%2#int.from_bytes(secretCipher.encrypt(add_to_16(str(s)+str(2))), 'big', signed=False)%2
+    tR = hash(str(secretKey)+str(s)+str(3))%2#int.from_bytes(secretCipher.encrypt(add_to_16(str(s)+str(3))), 'big', signed=False)%2
     return sL,tL,sR,tR
 
 def bitExtract(ind, n):
@@ -122,17 +123,59 @@ class logDPF:
                 sList[i] = sR
                 tList[i] = tR
         return ((-1)**b)*(convert(self.convertKey, sList[n])+tList[n]*CW[n+1])%2
+    
+    def evalAll(self, b, k_b):
+        n = math.ceil(math.log2(self.input_length))
+        resList = []
+        #[[0 for j in range(2**i)] for i in range(8+1)]
+        sList = [["" for j in range(2**i)] for i in range(n+1)]
+        tList = [[0 for j in range(2**i)] for i in range(n+1)]
+
+        sList[0][0], CW = k_b
+        tList[0][0] = b
+        for i in range(1, n+1):
+            for j in range(0, 2**i, 2):
+                s_CW, tL_CW, tR_CW = CW[i]
+                tempsL, temptL, tempsR, temptR = prg(self.prgKey, sList[i-1][j//2])
+                sList[i][j] = byteXor(tempsL,tList[i-1][j//2]*s_CW)
+                tList[i][j] = temptL^(tList[i-1][j//2]*tL_CW)
+                sList[i][j+1] = byteXor(tempsR,tList[i-1][j//2]*s_CW)
+                tList[i][j+1] = temptR^(tList[i-1][j//2]*tR_CW)
+
+        for i in range(2**n):
+            resList.append(((-1)**b)*(convert(self.convertKey, sList[n][i])+tList[n][i]*CW[n+1])%2)
+        
+        return resList
         
 if __name__=="__main__":
-    input_length = 2**5
+    input_length = 5
     dpf = logDPF(input_length)
-    for i in range(input_length):
-        k_0, k_1 = dpf.gen_keys(i)
-        for j in range(input_length):   
-            val0 = dpf.eval(0, k_0, j)
-            val1 = dpf.eval(1, k_1, j)
-            assert ((i!=j) and (val1^val0==0)) or ((i==j) and (val1^val0==1))
-    print(val1^val0)
+    res1 = []
+    res2 = []
+    b1 = time.time()
+    #for i in range(input_length):
+    k_0, k_1 = dpf.gen_keys(2)
+    for j in range(input_length):   
+        val0 = dpf.eval(0, k_0, j)
+        val1 = dpf.eval(1, k_1, j)
+        res1.append(val0)
+        res2.append(val1)
+        #assert ((i!=j) and (val1^val0==0)) or ((i==j) and (val1^val0==1))
+    print(res1)
+    print(res2)
+
+    e1 = time.time()
+
+    res3 = []
+    res4 = []
+    b2 = time.time()
+    k_0, k_1 = dpf.gen_keys(2)
+    print(dpf.evalAll(0,k_0))
+    print(dpf.evalAll(1,k_1))
+    e2 = time.time()
+    print(e1-b1)
+    print(e2-b2)
+
 
 
 

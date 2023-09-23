@@ -1,18 +1,10 @@
-import cuckooHash
 import math
-
-class hORAM:
-
-    def __init__(self, arr, ) -> None:
-        """
-        We set lambda = len(arr) and size of each block is O(lambda*log n).
-        """
-        self.ell = math.ceil(math.log2(math.log2(len(arr))))
-        self.level = math.ceil(math.log2(len(arr)))
-
-        """
-        Element zone.
-        """
-        #self.EleZoneOne = [None]*
-        
-        pass
+tt = ["fss","fwr","twtw","yey","rwr","rwrw","w","p"]
+for e in tt:
+    print(hash(e+str(1))%2)
+    print(hash(e+str(2))%2)
+tList = [[0 for j in range(2**max(0,i-1))] for i in range(8+1)]
+print(tList)
+for j in range(0,8,2):
+    print(j)
+    print(j+1)

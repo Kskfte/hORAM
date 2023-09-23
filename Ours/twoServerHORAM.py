@@ -726,7 +726,7 @@ class cORAM:
         self.subRebuild(llev, tagLevList, eleLevList_0, eleLevList_1, shareLevTagList_0, shareLevTagList_1)
 
 if __name__=="__main__":
-    NN = 2**6
+    NN = 2**8
     A = []
     for i in range(NN):
         A.append((str(i), str(i+3))) # random.randint(0,sys.maxsize)
