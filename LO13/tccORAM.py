@@ -773,7 +773,7 @@ class dORAM:
 if __name__=="__main__":
     A = []
     
-    N = 2**15
+    N = 2**8
     for i in range(N):
         A.append((str(i), str(i+4)))
     access_times = N//2
