@@ -143,12 +143,14 @@ class aORAMClient:
         for i in range(len(self.localStorage)):
             kV = self.localStorage[i]
             tmpLev = gutils.findSharedLevel(tempPos[i],leafPos,self.treeDepth)
-            if tmpLev<1:
-                continue
-            if self.emptyForm in tempBuildPath[tmpLev-1]:
-                tmpInd = tempBuildPath[tmpLev-1].index(self.emptyForm)
-                tempBuildPath[tmpLev-1][tmpInd] = kV
-                haveWriteDict[kV[0]]=kV[1]
+            #if tmpLev<1:
+            #    continue
+            for wLev in range(tmpLev-1,-1,-1):
+                if self.emptyForm in tempBuildPath[wLev]:
+                    tmpInd = tempBuildPath[wLev].index(self.emptyForm)
+                    tempBuildPath[wLev][tmpInd] = kV
+                    haveWriteDict[kV[0]]=kV[1]
+                    break
 
         for kVList in tempBuildPath:
             for kV in kVList:
