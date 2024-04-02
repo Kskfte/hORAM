@@ -4,8 +4,11 @@ This is a project for the paper "Efficient Two-server ORAM with Logarithmic Band
 1. Ubuntu 20.04.6 operating system.
 2. Python version 3.9.13 installed on your local and server machine.
 3. Install the necessary libraries:
+
     `pip install numpy==1.21.5`
+
     `pip install pycryptodome==3.19.0`
+    
     `pip install pycryptodomex==3.19.0`
 ## Files
 * ``*ORAMClient.py``: The ORAM core code deployed on the client, which allows the client to adjust the database size, block size, and number of accesses.
