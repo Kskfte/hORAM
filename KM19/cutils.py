@@ -1,10 +1,24 @@
 import math
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
-import time
 import hashlib
 import random
 import string
+
+def computePosOfHash(secretKey, virAddr, bin_num_each_table):
+    return hash(str(secretKey)+str(virAddr)) % bin_num_each_table
+
+def computeRandomPos(bin_num_each_table):
+    return random.randint(0,bin_num_each_table-1)
+
+def computeCurrentTabSize(currentLevelEleNum, dbSize):
+    """
+    currentLevelEleNum is the element number before using the hash
+    """
+    epsilon = 0.75
+    bin_num_each_table = math.ceil(currentLevelEleNum/math.pow(math.log2(dbSize),epsilon))
+    size_each_bin = math.ceil(2*math.pow(math.log2(dbSize),epsilon))
+    return bin_num_each_table,size_each_bin
 
 def padToSize(s, len):
     return str(s).rjust(len, " ")

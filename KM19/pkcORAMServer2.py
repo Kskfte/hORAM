@@ -1,7 +1,7 @@
 import server
 import math
 import random
-from twoTierHash import computeCurrentTabSize
+from cutils import computeCurrentTabSize
 import copy
 import numpy as np
 import cutils

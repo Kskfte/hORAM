@@ -2,7 +2,7 @@ import server
 import math
 import random
 from Cryptodome.Cipher import AES
-from twoTierHash import computePosOfHash,computeCurrentTabSize
+from cutils import computePosOfHash,computeCurrentTabSize
 import copy
 import numpy as np
 import cutils

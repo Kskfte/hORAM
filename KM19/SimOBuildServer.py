@@ -1,6 +1,6 @@
 import server
 import math
-from twoTierHash import computeCurrentTabSize
+from cutils import computeCurrentTabSize
 import cutils
 
 class SimOBuildServer:

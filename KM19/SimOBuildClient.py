@@ -5,7 +5,7 @@ import time
 import client
 import cutils
 import pickle
-from twoTierHash import computePosOfHash,computeCurrentTabSize
+from cutils import computePosOfHash,computeCurrentTabSize
 
 
 class SimOBuildClient:
