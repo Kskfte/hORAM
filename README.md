@@ -17,7 +17,7 @@ This is a project for the paper "Efficient Two-server ORAM with Logarithmic Band
 * ``server.py``: The TCP protocol deployed on the two servers.
 * ``*utils.py``: The implementation of some auxiliary functions kept on both the servers and the client, including DPF, read-only PIR, write-only PIR, PRF, etc.
 * ``SimOBuildClient.py/SimOBuildServer.py``: Since KM19 requires the oblivious sort to implement its rebuild operations, which consumes massive time, users can first pre-test the cost of rebuild by deploying these two files on the client and a server so that accelerating the experiment.
-## Deployments
+## Deployment
 Users need to deploy two servers and copy the corresponding two files ``*ORAMServer.py`` and ``*ORAMServer2.py`` on each server. The file ``server.py`` and other ``*utils`` files are also needed to be copied in two servers. The files ``*ORAMClient.py``、``client.py``、and ``*utils.py`` need to be preserved locally.
 ## Test
 Before starting the client-side code, ensure that the servers-side is already running. For experimental comparisons, users can modify the database size and block size in ``*ORAMClient.py`` to test the results under different database and block size.
